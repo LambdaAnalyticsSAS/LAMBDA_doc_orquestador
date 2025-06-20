@@ -1,0 +1,135 @@
+---
+title: Guía de Inicio Rápido
+description: Aprende cómo instalar y comenzar a usar el Orquestador de Lambda paso a paso.
+---
+
+Bienvenido a la **Guía de Inicio Rápido** del Orquestador de Lambda. Esta herramienta te permitirá generar proyectos estandarizados en segundos desde la consola. A continuación te mostramos los pasos para empezar a trabajar correctamente.
+
+## 🧰 Requisitos previos
+
+Antes de comenzar, asegúrate de tener instalado:
+
+- Python 3.10 o superior
+- Git
+- Un editor de código como Visual Studio Code
+- (Opcional) Un entorno virtual
+
+---
+
+## 1. 🚀 Instalar la librería
+
+Puedes instalar la librería globalmente o dentro de un entorno virtual.
+
+```bash
+pip install git+https://github.com/LambdaAnalyticsSAS/LAMBDA_orquestador.git
+```
+
+Para verificar que se instaló correctamente:
+
+```bash
+orquestador version
+```
+
+> Esto mostrará la versión instalada del orquestador.
+
+![Salida del comando orquestador version](/docs/imagenes/version.png)
+---
+
+## 2. 🧭 Crear un nuevo proyecto
+
+Ejecuta el siguiente comando para lanzar la interfaz interactiva desde la consola:
+
+```bash
+orquestador crear
+```
+
+Esto abrirá un flujo paso a paso con las siguientes preguntas:
+
+### a. Seleccionar tipo de proyecto
+
+```
+1. Proyecto API basado en Django
+2. Proyecto de Extracción, Transformación y Carga (ETL)
+3. Proyecto de Automatización BOT
+```
+![Salida del comando orquestador version](/docs/imagenes/crear.png)
+### b. Nombre del proyecto
+
+Reglas:
+- Sin espacios ni guiones normales (-), usar guiones bajos (_)
+- Sin tildes ni caracteres especiales
+- Mínimo 4 caracteres (sin contar guiones bajos)
+
+![Salida del comando orquestador version](/docs/imagenes/nombre_pro.png)
+### c. Nombre de la empresa
+
+Se utiliza como parte de la metadata del proyecto.
+![Salida del comando orquestador version](/docs/imagenes/nombre_emp.png)
+
+### d. Autores del proyecto
+
+Formato:
+- usuario1,usuario2
+- Usar nombres de usuario del correo corporativo (sin @lambdaanalytics.co)
+
+![Salida del comando orquestador version](/docs/imagenes/autores.png)
+
+### e. Ruta de destino
+
+- Si se deja vacío, se usa la ruta actual.
+- Sin tildes ni caracteres especiales.
+
+![Salida del comando orquestador version](/docs/imagenes/ruta.png)
+### f. Descripción del proyecto
+
+- Mínimo 50 caracteres, máximo 200
+
+![Salida del comando orquestador version](/docs/imagenes/descripcion.png)
+
+### g. Confirmación final
+
+Confirma con `y` para generar el proyecto o `n` para cancelar.
+
+![Salida del comando orquestador version](/docs/imagenes/confirmacion.png)
+
+---
+
+## 3. 🛠️ Configuración según el tipo de proyecto
+
+### 📦 Para proyectos Django:
+
+```bash
+cd nombre_proyecto
+python -m venv venv
+venv\Scripts\activate  # En Linux: source venv/bin/activate
+pip install -r requirements.txt
+# Editar el archivo .env con los datos de la base de datos
+python manage.py migrate
+python manage.py runserver
+```
+
+### 🧪 Para proyectos ETL o BOT
+
+```bash
+cd nombre_proyecto
+python -m venv venv
+venv\Scripts\activate  # En Linux: source venv/bin/activate
+# Editar setup.py si estás desarrollando
+pip install -e .  # Para desarrollo
+# o
+pip install .     # Para producción (código ya estable)
+```
+
+Inicia tu desarrollo dentro de la carpeta `/pasos`.
+
+---
+
+## ✨ Recomendación
+
+Abre el proyecto con Visual Studio Code o tu editor favorito para comenzar a trabajar.
+
+```bash
+code .
+```
+
+¡Y listo! Ya puedes comenzar a desarrollar tu proyecto estandarizado con el Orquestador de Lambda.
