@@ -1,12 +1,15 @@
 {
   "name": "aria-docs-rr",
+  "homepage": "https://lambdaanalyticssas.github.io/LAMBDA_doc_orquestador/",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.3",
@@ -21,6 +24,7 @@
     "@react-router/serve": "^7.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "gh-pages": "^6.3.0",
     "gray-matter": "^4.0.3",
     "isbot": "^5.1.17",
     "lucide-react": "^0.485.0",
