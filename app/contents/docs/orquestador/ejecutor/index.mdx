@@ -1,0 +1,95 @@
+---
+title: Ejecutor de proyectos
+description: Componente responsable de ejecutar paso a paso un proyecto orquestado, gestionando configuración, logs y conexión SQL.
+---
+
+## ⚙️ ¿Qué es el `EjecutorProyecto`?
+
+Es la clase principal que coordina la ejecución paso a paso de un proyecto generado por el Orquestador. Se encarga de:
+
+- Cargar la configuración desde `config/config.json`
+- Validar y preparar los pasos definidos por el usuario
+- Ejecutarlos secuencialmente y medir su tiempo
+- Manejar el paso de información entre pasos (`payload`)
+- Configurar y redirigir los logs a un archivo
+- Verificar la conectividad a bases de datos (si hay pasos SQL)
+
+---
+
+## 📌 ¿Dónde se usa?
+
+Este ejecutor se instancia y ejecuta automáticamente en el archivo `ejecucion.py`, el cual es el **punto de entrada principal** del proyecto. Allí se definen los pasos a ejecutar y se permite pasar parámetros por consola:
+
+```python
+from orquestador.core.ejecutor import EjecutorProyecto
+
+ejecutor = EjecutorProyecto(
+    nombre_proyecto="empresa_proyecto_TIPO",
+    pasos=[PasoTransformar()],
+    **kw
+)
+ejecutor.ejecutar()
+```
+
+El script acepta argumentos como:
+
+```bash
+python ejecucion.py --ruta_logs=logs/personalizados --ruta_resultados=resultados/2024
+```
+
+Estos argumentos se integran con la configuración global del proyecto, permitiendo máxima flexibilidad sin editar el código.
+
+---
+
+## 🧠 Funciones clave del ejecutor
+
+### `_cargar_configuracion()`
+Carga el archivo `config.json` y mezcla parámetros globales con los argumentos pasados por consola (`kwargs`).
+
+### `_validar_pasos()`
+Valida que cada paso definido herede de `PasoBase`. Así se asegura que todos los pasos tengan una interfaz común.
+
+### `_verificar_requisitos_sql()`
+Si hay pasos SQL (`PasoSQL`), valida:
+- Que exista una clave `dsn` en la configuración
+- Que ese DSN esté registrado en el sistema
+- Que la conexión sea exitosa
+
+### `_configurar_logs()`
+Redirige toda la salida estándar (`stdout` y `stderr`) hacia un archivo `logs/log_<timestamp>.log`, sin perder los colores en consola.
+
+### `ejecutar()`
+Itera sobre los pasos definidos:
+1. Muestra el nombre del paso
+2. Configura parámetros globales y específicos
+3. Ejecuta el paso
+4. Mide el tiempo y guarda la `payload` generada
+
+---
+
+## 🔍 ¿Qué es `TeeLogger`?
+
+Es una clase auxiliar que **duplica la salida** del programa:  
+- Muestra en consola con colores  
+- Guarda en archivo limpio, sin caracteres ANSI
+
+Esto permite tener trazabilidad de la ejecución sin perder legibilidad en consola.
+
+---
+
+## 🎯 ¿Por qué es tan importante `ejecucion.py`?
+
+- Permite definir los pasos del proyecto sin modificar el núcleo
+- Es el punto desde el cual se lanza todo el flujo
+- Acepta argumentos desde CLI para máxima reutilización
+- Aísla la lógica del orquestador del resto del código
+
+---
+
+## ✅ Recomendaciones
+
+- Define los pasos en orden en `ejecucion.py`
+- Usa `--ruta_logs` y `--ruta_resultados` para redirigir salidas
+- Asegúrate de tener `config/config.json` antes de ejecutar
+
+Este componente garantiza una **ejecución ordenada, auditable y extensible** de cualquier flujo orquestado.

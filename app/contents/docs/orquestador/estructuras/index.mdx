@@ -1,0 +1,65 @@
+---
+title: Estructura del proyecto
+description: Esta sección documenta la estructura generada automáticamente por el Orquestador de Lambda.
+---
+
+## 🧱 Estructura de Proyecto Generado
+
+Al crear un proyecto con el Orquestador de Lambda, se genera automáticamente la siguiente estructura de carpetas:
+
+```
+<empresa>_<nombre_proyecto>_<TIPO>/
+├── <empresa>_<nombre_proyecto>_<TIPO>/
+│   ├── config/
+│   │   ├── config.json
+│   │   └── .env
+│   ├── pasos/
+│   │   └── paso_01_transformar.py
+│   ├── recursos/
+│   │   ├── sql/
+│   │   └── excels/
+│   ├── logs/
+│   ├── resultados/
+│   └── __init__.py
+├── ejecucion.py
+├── README.md
+├── .gitignore
+├── setup.py
+└── .git/
+```
+
+## 📁 Descripción de carpetas y archivos
+
+| Elemento                        | Descripción                                                                                                                                 |
+|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| `config/`                      | Contiene la configuración general del proyecto. Incluye `config.json` con parámetros de ejecución y `.env` para variables de entorno.     |
+| `pasos/`                       | Carpeta donde se definen los pasos (ETL, BOT, etc). Cada paso es una clase que hereda de `Paso`.                                           |
+| `recursos/sql/`               | Almacena scripts SQL o consultas parametrizadas.                                                                                            |
+| `recursos/excels/`           | Carpeta para archivos Excel de entrada o referencia.                                                                                        |
+| `logs/`                        | Archivos de logs generados por la ejecución.                                                                                                |
+| `resultados/`                  | Contiene los resultados de cada ejecución.                                                                                                  |
+| `ejecucion.py`                 | Punto de entrada principal. Llama al ejecutor y define los pasos del proyecto.                                                             |
+| `README.md`                    | Documentación generada automáticamente con metadatos del proyecto.                                                                          |
+| `.gitignore`                   | Archivo que excluye caché, entornos virtuales y archivos auxiliares.                                                                        |
+| `setup.py`                     | Permite instalar el proyecto como paquete editable o productivo.                                                                            |
+| `__init__.py`                  | Habilita cada carpeta como paquete Python.                                                                                                  |
+| `.git/`                        | Repositorio Git creado automáticamente con commit inicial.                                                                                  |
+
+## 🧠 Funcionalidades automatizadas
+
+- ✔ Estructura generada según el tipo de proyecto
+- ✔ `README.md` y `.gitignore` autogenerados
+- ✔ Repositorio Git local con primer commit
+- ✔ Archivo de ejecución (`ejecucion.py`) listo para usar
+- ✔ Instalación como paquete (`pip install -e .`)
+
+## 🏃 Recomendación de uso
+
+```bash
+python -m venv env
+env\scripts\activate
+pip install -e .
+python -m <empresa>_<nombre_proyecto>_<TIPO>.ejecucion
+```
+
+Esto creará un entorno funcional para trabajar con pasos modulares y ejecución trazable.

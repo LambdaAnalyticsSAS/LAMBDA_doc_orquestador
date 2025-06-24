@@ -18,10 +18,6 @@ export const NAVLINKS = [
     title: "Blog",
     href: "/blog",
   },
-  {
-    title: "Ejemplos",
-    href: "#",
-  },
 
 ];
 

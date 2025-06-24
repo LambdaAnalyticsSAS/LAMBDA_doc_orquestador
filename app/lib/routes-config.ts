@@ -23,7 +23,7 @@ export const ROUTES: EachRoute[] = [
     href: "/django",
     noLink: true,
     items: [
-      { title: "Estructura de proyectos Django", href: "" },
+      { title: "Creando un proyecto en Django", href: "" },
     ],
   },
   {
@@ -31,8 +31,7 @@ export const ROUTES: EachRoute[] = [
     href: "/orquestador",
     noLink: true,
     items: [
-      { title: "Estructura del proyecto", href: "/estructura" },
-      { title: "CLI - Línea de comandos", href: "/cli" },
+      { title: "Estructura del proyecto", href: "/estructuras" },
       { title: "Ejecutor de proyectos", href: "/ejecutor" },
       { title: "Pasos y flujo de ejecución", href: "/pasos" },
     ],

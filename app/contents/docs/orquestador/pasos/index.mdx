@@ -1,0 +1,151 @@
+---
+title: Pasos y flujo de ejecución
+description: Documentación detallada sobre cómo funcionan los pasos dentro del orquestador y qué métodos puedes usar desde self.
+---
+
+## 🔄 ¿Qué es un Paso?
+
+En el Orquestador de Lambda, cada unidad de trabajo modular se define como un **paso**. Un paso es una clase que **hereda de `Paso`** (que a su vez extiende de `PasoBase`) y define su lógica dentro del método `ejecutar()`.
+
+Ejemplo básico:
+
+```python
+from orquestador.core.pasos import Paso
+
+class PasoTransformar(Paso):
+    def ejecutar(self):
+        self.log("Iniciando transformación...")
+        # tu lógica aquí
+```
+
+---
+
+## 🧰 Métodos disponibles desde `self` (cuando heredas de Paso)
+
+A continuación se documentan todos los métodos útiles que puedes invocar desde `self` dentro de un paso personalizado:
+
+---
+
+### `self.get_params()`
+
+Devuelve un `dict` con todos los parámetros disponibles para el paso, fusionando los globales (`config.json -> global`) con los específicos del paso.
+
+```python
+params = self.get_params()
+ruta = params.get("ruta_archivo")
+```
+
+---
+
+### `self.obtener_parametro(clave)`
+
+Permite obtener un parámetro específico por clave desde la configuración combinada (paso + global).
+
+```python
+valor = self.obtener_parametro("archivo_entrada")
+```
+
+---
+
+### `self.log(mensaje: str, nivel: str = "INFO")`
+
+Imprime un mensaje en consola con estilo, usando colores según el nivel del log. Niveles válidos: `"INFO"`, `"SUCCESS"`, `"WARNING"`, `"ERROR"`.
+
+```python
+self.log("Archivo cargado exitosamente", nivel="SUCCESS")
+```
+
+---
+
+### `self.set_payload(payload)`
+
+En el Orquestador de Lambda, existe un contexto compartido llamado `payload`. Este contexto actúa como un contenedor de datos que se transfiere de un paso a otro durante la ejecución.
+```python
+resultado = {"mensaje": "hola mundo"}
+self.set_payload(resultado)
+```
+
+---
+
+### `self.get_payload()`
+
+Devuelve el `payload` actual del proceso, que normalmente es el resultado de pasos anteriores. Ideal para cadenas de transformación.
+
+```python
+data = self.get_payload()
+```
+
+---
+
+### `self.validar_parametros_requeridos(claves: list)`
+
+Valida que ciertas claves estén presentes en la configuración. Lanza un `ValueError` si falta alguna.
+
+```python
+self.validar_parametros_requeridos(["archivo_entrada", "formato"])
+```
+
+---
+
+### `self.obtener_nombre_paso()`
+
+Devuelve el nombre de la clase actual. Útil para logs o seguimiento.
+
+```python
+nombre = self.obtener_nombre_paso()
+```
+
+---
+
+### `self.obtener_carpeta_resultados()`
+
+Devuelve la ruta a la carpeta de resultados. Si se definió `--ruta_resultados` al ejecutar, se toma esa ruta. Si no, se usa el default `resultados/`.
+
+```python
+ruta = self.obtener_carpeta_resultados()
+archivo = ruta / "salida.csv"
+```
+
+---
+
+### `self.obtener_carpeta_recursos()`
+
+Devuelve la ruta a la carpeta de `recursos/`. Usa la ruta base del proyecto a menos que se sobreescriba con `--ruta_recursos`.
+
+```python
+ruta = self.obtener_carpeta_recursos()
+```
+
+---
+
+### `self.obtener_carpeta_sql()`
+
+Devuelve la subcarpeta `sql/` dentro de `recursos/`, útil si vas a usar consultas o plantillas SQL.
+
+```python
+sql_path = self.obtener_carpeta_sql() / "consulta.sql"
+```
+
+---
+
+## 🧪 Flujo de ejecución entre pasos
+
+1. Se define un array de pasos en el `ejecucion.py`
+2. El `EjecutorProyecto` recorre cada paso:
+   - Llama `set_payload()` con el resultado del paso anterior
+   - Llama `ejecutar()`
+   - Guarda el resultado usando `get_payload()`
+3. Cada paso puede leer configuración, escribir resultados, y dejar trazabilidad.
+
+---
+
+## ✅ Recomendaciones para crear pasos
+
+- Hereda de `Paso` y no de `PasoBase`
+- Implementa el método `ejecutar()`
+- Usa `self.log()` para trazabilidad clara
+- Usa `self.get_params()` en vez de acceder directamente a configuraciones
+
+---
+
+Así se garantiza un flujo modular, claro y reutilizable entre pasos del orquestador.

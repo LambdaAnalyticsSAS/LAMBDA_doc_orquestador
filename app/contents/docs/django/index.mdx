@@ -1,61 +1,95 @@
 ---
-title: Introducción
-description: Esta sección presenta una visión general del Orquestador de Lambda.
+title: Estructura de proyecto Django
+description: Esta sección documenta la plantilla Django generada por el Orquestador.
 ---
 
-Bienvenido al **Orquestador de Lambda** 📦  
-Una librería flexible y fácil de usar que permite estandarizar, automatizar y ejecutar proyectos de analítica, automatización y digitalización de forma estructurada.
+El Orquestador de Lambda permite generar automáticamente un proyecto Django totalmente funcional, listo para producción. Al seleccionar el tipo **"Django"**, se crea una plantilla con las siguientes características:
 
-Tanto si eres desarrollador como analista de negocio, esta herramienta fue diseñada para que crear y mantener proyectos en Python para que sea más rápido, ordenado y colaborativo.
+## ⚙️ Características del proyecto generado
 
----
-
-## 🧠 Filosofía del Proyecto
-
-El **Orquestador de Lambda** es una librería de código abierto dentro de la organización. Creemos en la colaboración, la estandarización y la eficiencia como pilares para el desarrollo profesional de proyectos técnicos.
-
-<Note title="¿Quieres contribuir?">
-  ¡Tu aporte es bienvenido! Revisa nuestro [repositorio en GitHub](https://github.com/tu-repo) para sugerir mejoras, reportar errores o enviar PRs con nuevas funciones.
-
-  🧑‍💻 Desarrollador encargado: **David Soto Rivera**  
-  📧 Contacto: [david.soto@lambdaanalytics.co](mailto:david.soto@lambdaanalytics.co)
-</Note>
-
+- Proyecto Django 5.2.1
+- Configuración de base de datos PostgreSQL con variables desde `.env`
+- Autenticación JWT con `rest_framework_simplejwt`
+- Gestión de usuarios personalizada (`Usuarios`)
+- Gestión de archivos (`Base`)
+- Configuración de CORS (`django-cors-headers`)
+- Repositorio Git local creado automáticamente con primer commit
 
 ---
+## 🧩 Estructura general
 
-## 🔍 Descripción General
-
-Esta librería ofrece una base sólida para proyectos de:
-
-- **Analítica y ETL**
-- **Automatización de tareas con APIs o navegadores tipo BOT**
-- **Digitalización con Django y DRF**
-
-El orquestador genera estructuras estandarizadas, configura automáticamente variables de entorno, expone funciones reutilizables, y permite incluso a usuarios no técnicos ejecutar flujos funcionales.
-
+```bash
+plantillas_django/
+├── Base/                   # App base con modelos comunes y gestión de archivos
+├── Usuarios/               # App para gestión completa de usuarios
+├── project_name/           # Configuración principal del proyecto Django
+├── .env                    # Variables de entorno (creado automáticamente)
+├── .gitignore              # Ignora entorno virtual, caché, etc.
+├── manage.py
+└── requirements.txt
+```
 ---
+## 🔐 Autenticación y gestión de usuarios
 
-## 🚀 Características Principales
-
-| **Funcionalidad**                      | **Descripción**                                                                 |
-|----------------------------------------|---------------------------------------------------------------------------------|
-| Estructura estándar de proyectos       | Carpetas organizadas para datos, scripts, resultados, recursos, logs, etc.     |
-| Soporte multientorno                   | Configuración centralizada con `.env` y `config.json`                          |
-| CLI integrada                          | Generador rápido de proyectos según el tipo (ETL, Django, Bot, etc.)          |
-| Plantillas Django reutilizables        | Con modelos de usuario, autenticación y endpoints preconfigurados              |
-| Ejecución para no programadores        | Permite a analistas ejecutar proyectos sin escribir código                     |
-| Compatible con herramientas comunes    | Requests, Selenium, Pandas, Django, DRF, ETC                                 |
+- Modelo de usuario personalizado (`Usuario`) con correo como campo principal (`USERNAME_FIELD = 'correo'`)
+- Roles mediante `Group`
+- Funciones incluidas:
+  - Registro y login con JWT
+  - Obtener y editar perfil
+  - Cambiar o restablecer contraseña
+  - Activar / inactivar usuarios
+- API REST activa con endpoints bajo `/usuarios/`
 
 ---
 
-## 🛠️ Tecnologías utilizadas
+## 📁 Gestión de archivos
 
-El Orquestador de Lambda está construido con herramientas ampliamente adoptadas en la industria:
+La app `Base` incluye el modelo `FileData` para:
 
-- **Python 3.10+** – Lenguaje base para todos los flujos
-- **Click** – Interfaz de línea de comandos
-- **Django / DRF** – Backend modular para proyectos web
-- **.env & JSON** – Configuración de entornos y parámetros
+- Subida de archivos con ruta y nombre normalizados
+- Eliminación automática del archivo físico al borrar el registro
+- API REST para recuperar archivos en base64
+
+```python
+class FileData(BaseModel):
+    archivo = models.FileField(upload_to=guardar_archivo)
+    ruta_archivo = models.TextField()
+    nombre_archivo = models.TextField()
+    ...
+```
 
 ---
+
+
+## ⚙️ Configuración del entorno
+
+.env generado automáticamente:
+
+```
+SECRET_KEY='valor_parametrico'
+NAME_DATABASE='test'
+USER_DATABASE='postgres'
+PASS_DATABASE='Admin2024*'
+HOST_DATABASE='127.0.0.1'
+PORT_DATABASE='5432'
+```
+
+Esto permite mantener segura la configuración sensible del entorno.
+
+---
+
+## 🧪 Primeros pasos
+
+```bash
+python -m venv venv
+venv\Scripts\activate  # Linux: source venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+
+Con estos pasos tendrás una API Django funcional con:
+
+- Gestión de usuarios con JWT
+- Autenticación, perfiles, y recuperación de contraseña
+- Subida y consulta de archivos
