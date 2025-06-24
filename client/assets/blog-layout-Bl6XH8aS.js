@@ -1,0 +1,1 @@
+import{w as o}from"./with-props-dGXkNs7L.js";import{l as t,O as s}from"./chunk-XJI4KG32-CQ4juLUX.js";const a=o(function(){return t.jsx("div",{className:"flex flex-col items-start justify-center pt-8 pb-10 w-full mx-auto",children:t.jsx(s,{})})});export{a as default};
